@@ -4,22 +4,14 @@ import java.time.Instant
 import java.util.UUID
 
 class Category private constructor (
-    id: String,
-    name: String,
-    description: String,
-    isActive: Boolean,
-    createdAt: Instant,
-    updatedAt: Instant,
-    deletedAt: Instant?
+    private val id: String,
+    private val name: String,
+    private val description: String,
+    private val isActive: Boolean,
+    private val createdAt: Instant,
+    private val updatedAt: Instant,
+    private val deletedAt: Instant?
 ) {
-    private val id: String = id
-    private val name: String = name
-    private val description: String = description
-    private val isActive: Boolean = isActive
-    private val createdAt: Instant = createdAt
-    private val updatedAt: Instant = updatedAt
-    private val deletedAt: Instant? = deletedAt
-
 
     companion object {
         fun newCategory(
