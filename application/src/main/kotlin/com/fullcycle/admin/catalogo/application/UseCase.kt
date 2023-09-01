@@ -1,6 +1,9 @@
 package com.fullcycle.admin.catalogo.application
+
 import com.fullcycle.admin.catalogo.domain.Category
-fun main() {
-    var category = Category()
-    println("Hello World!")
+
+class UseCase {
+    fun execute(): Category {
+        return Category()
+    }
 }

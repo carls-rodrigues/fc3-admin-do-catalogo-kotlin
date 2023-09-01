@@ -1,3 +1,5 @@
 package com.fullcycle.admin.catalogo.domain
 
-public class Category {}
+class Category {
+    var id: String? = null
+}
