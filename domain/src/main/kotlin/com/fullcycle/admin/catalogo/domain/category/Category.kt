@@ -1,17 +1,17 @@
 package com.fullcycle.admin.catalogo.domain.category
 
+import com.fullcycle.admin.catalogo.domain.AggregateRoot
 import java.time.Instant
-import java.util.UUID
 
 class Category private constructor (
-    private val id: String,
+    id: CategoryID,
     private val name: String,
     private val description: String,
     private val isActive: Boolean,
     private val createdAt: Instant,
     private val updatedAt: Instant,
     private val deletedAt: Instant?
-) {
+) : AggregateRoot<CategoryID> (id) {
 
     companion object {
         fun newCategory(
@@ -20,7 +20,7 @@ class Category private constructor (
             isActive: Boolean
 
         ): Category {
-            val id = UUID.randomUUID().toString()
+            val id = CategoryID.unique()
             val now = Instant.now()
             return Category(
                 id,
@@ -32,10 +32,6 @@ class Category private constructor (
                 deletedAt = null
             )
         }
-    }
-
-    fun getId(): String {
-        return this.id
     }
 
     fun name(): String {
