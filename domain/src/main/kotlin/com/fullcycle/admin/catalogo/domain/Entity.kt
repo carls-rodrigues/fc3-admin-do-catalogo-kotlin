@@ -1,5 +1,6 @@
 package com.fullcycle.admin.catalogo.domain
 
+import com.fullcycle.admin.catalogo.domain.validation.ValidationHandler
 import java.util.Objects
 
 abstract class Entity<ID: Identifier> (
@@ -12,6 +13,7 @@ abstract class Entity<ID: Identifier> (
     fun getId(): ID {
         return entityId
     }
+    abstract fun validate(handler: ValidationHandler)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Entity<*>) return false
