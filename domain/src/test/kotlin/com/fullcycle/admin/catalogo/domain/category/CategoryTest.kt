@@ -48,4 +48,122 @@ class CategoryTest {
         Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size)
         Assertions.assertEquals(expectedErrorMessage, actualException.getErrors()[0].message)
     }
+
+    @Test
+    fun given_an_invalid_empty_name_when_call_new_category_and_validate_then_should_receive_error() {
+        val expectedName = "  "
+        val expectedErrorMessage = "'name' should not be empty"
+        val expectedErrorCount = 1
+        val expectedDescription = "A categoria mais assistida"
+        val expectedIsActive = true
+
+        val actualCategory = Category.newCategory(
+            name = expectedName,
+            description = expectedDescription,
+            isActive = expectedIsActive
+        )
+        val handler = ThrowsValidationHandler()
+        val actualException = Assertions.assertThrows(DomainException::class.java) {
+            actualCategory.validate(handler)
+        }
+
+        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size)
+        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors()[0].message)
+    }
+
+    @Test
+    fun given_an_invalid_name_length_less_than_3_when_call_new_category_and_validate_then_should_receive_error() {
+        val expectedName = "Fi "
+        val expectedErrorMessage = "'name' must be between 3 and 255 characters"
+        val expectedErrorCount = 1
+        val expectedDescription = "A categoria mais assistida"
+        val expectedIsActive = true
+
+        val actualCategory = Category.newCategory(
+            name = expectedName,
+            description = expectedDescription,
+            isActive = expectedIsActive
+        )
+        val handler = ThrowsValidationHandler()
+        val actualException = Assertions.assertThrows(DomainException::class.java) {
+            actualCategory.validate(handler)
+        }
+
+        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size)
+        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors()[0].message)
+    }
+
+    @Test
+    fun given_an_invalid_name_length_more_than_255_when_call_new_category_and_validate_then_should_receive_error() {
+        val expectedName = "a".repeat(256)
+        val expectedErrorMessage = "'name' must be between 3 and 255 characters"
+        val expectedErrorCount = 1
+        val expectedDescription = "A categoria mais assistida"
+        val expectedIsActive = true
+
+        val actualCategory = Category.newCategory(
+            name = expectedName,
+            description = expectedDescription,
+            isActive = expectedIsActive
+        )
+        val handler = ThrowsValidationHandler()
+        val actualException = Assertions.assertThrows(DomainException::class.java) {
+            actualCategory.validate(handler)
+        }
+
+        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size)
+        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors()[0].message)
+    }
+
+    @Test
+    fun given_an_valid_empty_description_when_call_new_category_and_validate_then_should_receive_error() {
+        val expectedName = "Filmes"
+        val expectedDescription = "   "
+        val expectedIsActive = true
+
+        val actualCategory = Category.newCategory(
+            name = expectedName,
+            description = expectedDescription,
+            isActive = expectedIsActive
+        )
+
+        Assertions.assertDoesNotThrow() {
+            actualCategory.validate(ThrowsValidationHandler())
+        }
+
+        Assertions.assertNotNull(actualCategory)
+        Assertions.assertNotNull(actualCategory.getId())
+        Assertions.assertEquals(expectedName, actualCategory.getName())
+        Assertions.assertEquals(expectedDescription, actualCategory.getDescription())
+        Assertions.assertEquals(expectedIsActive, actualCategory.isActive())
+        Assertions.assertNotNull(actualCategory.getCreatedAt())
+        Assertions.assertNotNull(actualCategory.getUpdatedAt())
+        Assertions.assertNull(actualCategory.getDeletedAt())
+    }
+
+    @Test
+    fun given_an_valid_false_is_active_when_call_new_category_and_validate_then_should_receive_error() {
+        val expectedName = "Filmes"
+        val expectedDescription = "A categoria mais assistida"
+        val expectedIsActive = false
+
+        val actualCategory = Category.newCategory(
+            name = expectedName,
+            description = expectedDescription,
+            isActive = expectedIsActive
+        )
+
+        Assertions.assertDoesNotThrow() {
+            actualCategory.validate(ThrowsValidationHandler())
+        }
+
+        Assertions.assertNotNull(actualCategory)
+        Assertions.assertNotNull(actualCategory.getId())
+        Assertions.assertEquals(expectedName, actualCategory.getName())
+        Assertions.assertEquals(expectedDescription, actualCategory.getDescription())
+        Assertions.assertEquals(expectedIsActive, actualCategory.isActive())
+        Assertions.assertNotNull(actualCategory.getCreatedAt())
+        Assertions.assertNotNull(actualCategory.getUpdatedAt())
+        Assertions.assertNotNull(actualCategory.getDeletedAt())
+    }
 }
