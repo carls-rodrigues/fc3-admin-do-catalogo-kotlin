@@ -30,7 +30,7 @@ class Category private constructor (
                 isActive,
                 createdAt = now,
                 updatedAt = now,
-                deletedAt = null
+                deletedAt = if (!isActive) now else null
             )
         }
     }
