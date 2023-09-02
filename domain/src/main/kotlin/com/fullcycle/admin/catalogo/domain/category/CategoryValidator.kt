@@ -5,7 +5,7 @@ import com.fullcycle.admin.catalogo.domain.validation.ValidationHandler
 import com.fullcycle.admin.catalogo.domain.validation.Validator
 
 class CategoryValidator(
-    private final val category: Category,
+    private val category: Category,
     validationHandler: ValidationHandler
 ): Validator(validationHandler) {
     override fun validate() {
