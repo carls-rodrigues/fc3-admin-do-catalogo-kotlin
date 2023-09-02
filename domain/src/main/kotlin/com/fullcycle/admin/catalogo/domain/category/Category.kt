@@ -1,12 +1,13 @@
 package com.fullcycle.admin.catalogo.domain.category
 
 import com.fullcycle.admin.catalogo.domain.AggregateRoot
+import com.fullcycle.admin.catalogo.domain.validation.ValidationHandler
 import java.time.Instant
 
 class Category private constructor (
     id: CategoryID,
-    private val name: String,
-    private val description: String,
+    private val name: String?,
+    private val description: String?,
     private val isActive: Boolean,
     private val createdAt: Instant,
     private val updatedAt: Instant,
@@ -15,8 +16,8 @@ class Category private constructor (
 
     companion object {
         fun newCategory(
-            name: String,
-            description: String,
+            name: String?,
+            description: String?,
             isActive: Boolean
 
         ): Category {
@@ -34,11 +35,11 @@ class Category private constructor (
         }
     }
 
-    fun name(): String {
+    fun getName(): String? {
         return this.name
     }
 
-    fun getDescription(): String {
+    fun getDescription(): String? {
         return this.description
     }
 
@@ -56,5 +57,9 @@ class Category private constructor (
 
     fun getDeletedAt(): Instant? {
         return this.deletedAt
+    }
+
+    override fun validate(handler: ValidationHandler) {
+        CategoryValidator(this, handler).validate()
     }
 }
