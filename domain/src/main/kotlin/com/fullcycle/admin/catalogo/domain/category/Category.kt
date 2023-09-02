@@ -6,8 +6,8 @@ import java.time.Instant
 
 class Category private constructor (
     id: CategoryID,
-    private val name: String?,
-    private val description: String?,
+    private var name: String?,
+    private var description: String?,
     private var isActive: Boolean,
     private val createdAt: Instant,
     private var updatedAt: Instant,
@@ -51,6 +51,21 @@ class Category private constructor (
         return this
     }
 
+    fun update(
+        name: String?,
+        description: String?,
+        isActive: Boolean
+    ): Category {
+        if (isActive) {
+            activate()
+        } else {
+            deactivate()
+        }
+        this.name = name
+        this.description = description
+        this.updatedAt = Instant.now()
+        return this
+    }
     fun getName(): String? {
         return this.name
     }
