@@ -1,12 +1,16 @@
 package com.fullcycle.admin.catalogo.domain.exceptions
 import com.fullcycle.admin.catalogo.domain.validation.Error
 class DomainException private constructor(
+    private val aMessage: String,
     private val errors: List<Error>
-
-): RuntimeException("", null, true, false) {
+) : NoStacktraceException(aMessage) {
     companion object {
+        fun with(error: Error): DomainException {
+            return DomainException(error.message, listOf(error))
+        }
+
         fun with(errors: List<Error>): DomainException {
-            return DomainException(errors)
+            return DomainException("", errors)
         }
     }
 
