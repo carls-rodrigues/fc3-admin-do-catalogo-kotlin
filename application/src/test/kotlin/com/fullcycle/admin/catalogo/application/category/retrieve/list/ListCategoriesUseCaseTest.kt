@@ -64,4 +64,34 @@ class ListCategoriesUseCaseTest {
         Assertions.assertEquals(expectedPerPage, actualResult.perPage)
         Assertions.assertEquals(categories.size.toLong(), actualResult.total)
     }
+
+    @Test
+    fun `given a valid query when has no results then should return empty Categories`() {
+        val categories = listOf<Category>()
+
+        val expectedPage = 0
+        val expectedPerPage = 0
+        val expectedTerms = ""
+        val expectedSort = "createdAt"
+        val expectedDirection = "asc"
+
+        val aQuery = CategorySearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection)
+
+        val expectedPagination = Pagination(expectedPage, expectedPerPage, categories.size.toLong(), categories)
+
+
+        val expectedItemsCount = 0
+        val expectedResult = expectedPagination.map(CategoryListOutput::from)
+
+        whenever(categoryGateway.findAll(eq(aQuery)))
+            .thenReturn(expectedPagination)
+
+        val actualResult = useCase.execute(aQuery)
+
+        Assertions.assertEquals(expectedItemsCount, actualResult.items.size)
+        Assertions.assertEquals(expectedResult, actualResult)
+        Assertions.assertEquals(expectedPage, actualResult.currentPage)
+        Assertions.assertEquals(expectedPerPage, actualResult.perPage)
+        Assertions.assertEquals(categories.size.toLong(), actualResult.total)
+    }
 }
