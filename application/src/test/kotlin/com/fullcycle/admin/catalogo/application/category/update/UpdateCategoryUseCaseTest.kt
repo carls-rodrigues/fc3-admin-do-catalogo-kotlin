@@ -17,10 +17,10 @@ import java.util.*
 @ExtendWith(MockitoExtension::class)
 class UpdateCategoryUseCaseTest {
     @Mock
-    private lateinit var categoryGateway: CategoryGateway;
+    private lateinit var categoryGateway: CategoryGateway
 
     @InjectMocks
-    private lateinit var useCase: DefaultUpdateCategoryUseCase;
+    private lateinit var useCase: DefaultUpdateCategoryUseCase
 
     @Test
     fun given_an_valid_command_when_call_update_category_then_should_return_category_id() {
@@ -174,8 +174,6 @@ class UpdateCategoryUseCaseTest {
 
     @Test
     fun given_a_command_with_invalid_id_when_calls_update_category_then_should_return_not_found_exception() {
-        val category = Category.newCategory("Film", null, true)
-
         val expectedName = "Filmes"
         val expectedDescription = "A categoria mais assistida"
         val expectedIsActive = false
