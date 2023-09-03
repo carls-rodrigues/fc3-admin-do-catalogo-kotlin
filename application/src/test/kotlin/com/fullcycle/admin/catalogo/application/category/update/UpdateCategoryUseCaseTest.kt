@@ -5,6 +5,7 @@ import com.fullcycle.admin.catalogo.domain.category.CategoryGateway
 import com.fullcycle.admin.catalogo.domain.category.CategoryID
 import com.fullcycle.admin.catalogo.domain.exceptions.DomainException
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.AdditionalAnswers.returnsFirstArg
@@ -21,6 +22,11 @@ class UpdateCategoryUseCaseTest {
 
     @InjectMocks
     private lateinit var useCase: DefaultUpdateCategoryUseCase
+
+    @BeforeEach
+    fun cleanUp() {
+        reset(categoryGateway)
+    }
 
     @Test
     fun given_an_valid_command_when_call_update_category_then_should_return_category_id() {
