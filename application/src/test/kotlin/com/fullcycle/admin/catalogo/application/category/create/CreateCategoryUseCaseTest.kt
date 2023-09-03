@@ -1,7 +1,6 @@
 package com.fullcycle.admin.catalogo.application.category.create
 
 import com.fullcycle.admin.catalogo.domain.category.CategoryGateway
-import com.fullcycle.admin.catalogo.domain.exceptions.DomainException
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -37,7 +36,7 @@ class CreateCategoryUseCaseTest {
         whenever(categoryGateway.create(any()))
             .thenAnswer(returnsFirstArg<CategoryGateway>())
 
-        val actualOutput = useCase.execute(command)
+        val actualOutput = useCase.execute(command).get()
 
         Assertions.assertNotNull(actualOutput)
         Assertions.assertNotNull(actualOutput.id)
@@ -68,11 +67,9 @@ class CreateCategoryUseCaseTest {
             isActive = expectedIsActive
         )
 
-        val actualException = Assertions.assertThrows(DomainException::class.java) {
-            useCase.execute(command)
-        }
-
-        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors()[0].message)
+        val notification = useCase.execute(command).left
+        Assertions.assertEquals(expectedErrorCount, notification.getErrors().size)
+        Assertions.assertEquals(expectedErrorMessage, notification.firstError()?.message)
 
         verify(categoryGateway, times(0)).create(any())
     }
@@ -93,7 +90,7 @@ class CreateCategoryUseCaseTest {
         whenever(categoryGateway.create(any()))
             .thenAnswer(returnsFirstArg<CategoryGateway>())
 
-        val actualOutput = useCase.execute(command)
+        val actualOutput = useCase.execute(command).get()
 
         Assertions.assertNotNull(actualOutput)
         Assertions.assertNotNull(actualOutput.id)
@@ -117,6 +114,7 @@ class CreateCategoryUseCaseTest {
         val expectedDescription = "A categoria mais assistida"
         val expectedIsActive = true
         val expectedErrorMessage = "Gateway error"
+        val expectedErrorCount = 1
 
         val command = CreateCategoryCommand.with(
             name = expectedName,
@@ -127,11 +125,9 @@ class CreateCategoryUseCaseTest {
         whenever(categoryGateway.create(any()))
             .thenThrow(IllegalStateException(expectedErrorMessage))
 
-        val actualException = Assertions.assertThrows(IllegalStateException::class.java) {
-            useCase.execute(command)
-        }
-
-        Assertions.assertEquals(expectedErrorMessage, actualException.message)
+        val notification = useCase.execute(command).left
+        Assertions.assertEquals(expectedErrorCount, notification.getErrors().size)
+        Assertions.assertEquals(expectedErrorMessage, notification.firstError()?.message)
 
         verify(categoryGateway, times(1))
             .create(argThat { aCategory ->
