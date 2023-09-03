@@ -87,4 +87,46 @@ class UpdateCategoryUseCaseTest {
         verify(categoryGateway, times(0)).update(any())
     }
 
+    @Test
+    fun given_an_valid_inactivate_command_when_call_update_category_then_should_return_an_inactive_category_id() {
+        val category = Category.newCategory("Film", null, true)
+
+        Assertions.assertTrue(category.isActive())
+        Assertions.assertNull(category.getDeletedAt())
+
+        val expectedName = "Filmes"
+        val expectedDescription = "A categoria mais assistida"
+        val expectedIsActive = false
+        val expectedId = category.getId()
+
+        val command = UpdateCategoryCommand.with(
+            expectedId.getValue(),
+            expectedName,
+            expectedDescription,
+            expectedIsActive
+        )
+        whenever(categoryGateway.findByID(eq(expectedId)))
+            .thenReturn(category.clone())
+
+        whenever(categoryGateway.update(any()))
+            .thenAnswer(returnsFirstArg<CategoryGateway>())
+
+        val actualOutput = useCase.execute(command).get()
+
+        Assertions.assertNotNull(actualOutput)
+        Assertions.assertNotNull(actualOutput.id)
+
+        verify(categoryGateway, times(1)).findByID(eq(expectedId))
+        verify(categoryGateway, times(1))
+            .update(argThat { aUpdatedCategory ->
+                Objects.equals(expectedName, aUpdatedCategory.getName())
+                        && Objects.equals(expectedDescription, aUpdatedCategory.getDescription())
+                        && Objects.equals(expectedIsActive, aUpdatedCategory.isActive())
+                        && Objects.equals(expectedId, aUpdatedCategory.getId())
+                        && Objects.equals(category.getCreatedAt(), aUpdatedCategory.getCreatedAt())
+                        && category.getUpdatedAt().isBefore(aUpdatedCategory.getUpdatedAt())
+                        && Objects.nonNull(aUpdatedCategory.getDeletedAt())
+            })
+    }
+
 }
