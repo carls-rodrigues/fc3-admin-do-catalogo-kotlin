@@ -12,7 +12,7 @@ class Category private constructor (
     private val createdAt: Instant,
     private var updatedAt: Instant,
     private var deletedAt: Instant?
-) : AggregateRoot<CategoryID> (id) {
+) : AggregateRoot<CategoryID>(id), Cloneable {
 
     companion object {
         fun newCategory(
@@ -90,6 +90,13 @@ class Category private constructor (
         return this.deletedAt
     }
 
+    public override fun clone(): Category {
+        try {
+            return super.clone() as Category
+        } catch (e: CloneNotSupportedException) {
+            throw AssertionError(e)
+        }
+    }
 
     override fun validate(handler: ValidationHandler) {
         CategoryValidator(this, handler).validate()
