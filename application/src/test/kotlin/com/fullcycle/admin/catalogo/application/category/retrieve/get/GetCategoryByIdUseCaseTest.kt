@@ -64,14 +64,13 @@ class GetCategoryByIdUseCaseTest {
             useCase.execute(expectedId.getValue())
         }
 
-        Assertions.assertEquals(expectedErrorMessage, actualException.message);
+        Assertions.assertEquals(expectedErrorMessage, actualException.message)
 
     }
 
     @Test
     fun `given a valid id when Gateway Throws Exception then should return Exception`() {
         val expectedErrorMessage = "Gateway error"
-        val expectedErrorCount = 1
         val expectedId = CategoryID.from("123")
 
         whenever(categoryGateway.findByID(eq(expectedId))).thenThrow(IllegalStateException("Gateway error"))
