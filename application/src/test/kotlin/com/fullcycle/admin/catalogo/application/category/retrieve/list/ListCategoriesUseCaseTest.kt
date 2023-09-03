@@ -64,7 +64,6 @@ class ListCategoriesUseCaseTest {
         Assertions.assertEquals(expectedPerPage, actualResult.perPage)
         Assertions.assertEquals(categories.size.toLong(), actualResult.total)
     }
-
     @Test
     fun `given a valid query when has no results then should return empty Categories`() {
         val categories = listOf<Category>()
@@ -93,5 +92,26 @@ class ListCategoriesUseCaseTest {
         Assertions.assertEquals(expectedPage, actualResult.currentPage)
         Assertions.assertEquals(expectedPerPage, actualResult.perPage)
         Assertions.assertEquals(categories.size.toLong(), actualResult.total)
+    }
+
+    @Test
+    fun `given a valid query when gateway throws exception then should return exception`() {
+        val expectedPage = 0
+        val expectedPerPage = 0
+        val expectedTerms = ""
+        val expectedSort = "createdAt"
+        val expectedDirection = "asc"
+        val expectedErrorMessage = "Gateway error"
+
+        val aQuery = CategorySearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection)
+
+        whenever(categoryGateway.findAll(eq(aQuery)))
+            .thenThrow(IllegalStateException(expectedErrorMessage))
+
+        val actualException = Assertions.assertThrows(IllegalStateException::class.java) {
+            useCase.execute(aQuery)
+        }
+
+        Assertions.assertEquals(expectedErrorMessage, actualException.message)
     }
 }
