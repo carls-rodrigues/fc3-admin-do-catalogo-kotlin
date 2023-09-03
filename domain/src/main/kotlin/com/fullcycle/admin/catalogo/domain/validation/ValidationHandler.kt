@@ -9,6 +9,10 @@ interface ValidationHandler {
         return getErrors().isNotEmpty()
     }
 
+    fun firstError(): Error? {
+        return if (getErrors().isNotEmpty()) getErrors()[0] else null
+    }
+
     fun getErrors(): List<Error>
     interface Validation {
         fun validate()
