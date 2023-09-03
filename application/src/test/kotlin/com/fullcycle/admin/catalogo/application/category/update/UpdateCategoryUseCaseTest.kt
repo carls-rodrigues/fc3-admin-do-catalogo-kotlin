@@ -58,4 +58,33 @@ class UpdateCategoryUseCaseTest {
             })
     }
 
+
+    @Test
+    fun given_an_invalid_name_when_call_UpdateCategory_then_should_return_DomainException() {
+        val category = Category.newCategory("Film", null, true)
+        val expectedName = null
+        val expectedDescription = "A categoria mais assistida"
+        val expectedIsActive = true
+        val expectedId = category.getId()
+
+        val expectedErrorMessage = "'name' should not be null"
+        val expectedErrorCount = 1
+
+        val command = UpdateCategoryCommand.with(
+            expectedId.getValue(),
+            expectedName,
+            expectedDescription,
+            expectedIsActive
+        )
+
+        whenever(categoryGateway.findByID(eq(expectedId)))
+            .thenReturn(category.clone())
+
+        val notification = useCase.execute(command).left
+        Assertions.assertEquals(expectedErrorCount, notification.getErrors().size)
+        Assertions.assertEquals(expectedErrorMessage, notification.firstError()?.message)
+
+        verify(categoryGateway, times(0)).update(any())
+    }
+
 }
