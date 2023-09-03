@@ -17,10 +17,10 @@ import java.util.*
 class CreateCategoryUseCaseTest {
 
     @Mock
-    private lateinit var categoryGateway: CategoryGateway;
+    private lateinit var categoryGateway: CategoryGateway
 
     @InjectMocks
-    private lateinit var useCase: DefaultCreateCategoryUseCase;
+    private lateinit var useCase: DefaultCreateCategoryUseCase
 
     @BeforeEach
     fun cleanUp() {
