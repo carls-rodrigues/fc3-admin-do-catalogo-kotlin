@@ -129,4 +129,45 @@ class UpdateCategoryUseCaseTest {
             })
     }
 
+    @Test
+    fun given_an_valid_command_when_gateway_throws_random_exception_then_should_return_a_exception() {
+        val category = Category.newCategory("Film", null, true)
+        // given
+        val expectedName = "Filmes"
+        val expectedDescription = "A categoria mais assistida"
+        val expectedIsActive = true
+        val expectedId = category.getId()
+
+        val expectedErrorMessage = "Gateway error"
+        val expectedErrorCount = 1
+
+        val command = UpdateCategoryCommand.with(
+            expectedId.getValue(),
+            expectedName,
+            expectedDescription,
+            expectedIsActive
+        )
+        whenever(categoryGateway.findByID(eq(expectedId)))
+            .thenReturn(category.clone())
+
+
+        whenever(categoryGateway.update(any()))
+            .thenThrow(IllegalStateException(expectedErrorMessage))
+
+        val notification = useCase.execute(command).left
+        Assertions.assertEquals(expectedErrorCount, notification.getErrors().size)
+        Assertions.assertEquals(expectedErrorMessage, notification.firstError()?.message)
+
+        verify(categoryGateway, times(1))
+            .update(argThat { aUpdatedCategory ->
+                Objects.equals(expectedName, aUpdatedCategory.getName())
+                        && Objects.equals(expectedDescription, aUpdatedCategory.getDescription())
+                        && Objects.equals(expectedIsActive, aUpdatedCategory.isActive())
+                        && Objects.equals(expectedId, aUpdatedCategory.getId())
+                        && Objects.equals(category.getCreatedAt(), aUpdatedCategory.getCreatedAt())
+                        && category.getUpdatedAt().isBefore(aUpdatedCategory.getUpdatedAt())
+                        && Objects.isNull(aUpdatedCategory.getDeletedAt())
+            })
+    }
+
 }
