@@ -1,10 +1,17 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.9.0'
     id 'application'
+    id 'org.springframework.boot' version '2.7.15'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
 group = 'com.fullcycle.admin.catalogo.infrastructure'
 version = '1.0-SNAPSHOT'
+
+bootJar {
+    archiveBaseName = 'application.jar'
+    destinationDirectory.set(file("${rootProject.buildDir}/libs"))
+}
 
 repositories {
     mavenCentral()
@@ -13,7 +20,11 @@ repositories {
 dependencies {
     implementation(project(":domain"))
     implementation(project(":application"))
-    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    implementation('org.springframework.boot:spring-boot-starter-web') {
+        exclude module: 'spring-boot-starter-tomcat'
+    }
+    implementation('org.springframework.boot:spring-boot-starter-undertow')
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 
 test {
