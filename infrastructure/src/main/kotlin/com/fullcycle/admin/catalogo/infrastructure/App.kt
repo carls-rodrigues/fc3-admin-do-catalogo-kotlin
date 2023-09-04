@@ -1,7 +1,8 @@
 package com.fullcycle.admin.catalogo.infrastructure
 
+import com.fullcycle.admin.catalogo.infrastructure.configuration.WebServerConfig
+import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
 import org.springframework.core.env.AbstractEnvironment
 
 @SpringBootApplication
@@ -14,8 +15,8 @@ open class App {
     }
 
     fun run(args: Array<String>) {
-//        SpringApplication.run(WebServerConfig::class.java, *args)
         System.setProperty(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME, "development")
-        runApplication<App>(*args)
+        SpringApplication.run(WebServerConfig::class.java, *args)
+//        runApplication<App>(*args)
     }
 }
