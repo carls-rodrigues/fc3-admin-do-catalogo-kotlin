@@ -14,3 +14,22 @@ spring:
     url: jdbc:mysql://${mysql.url}/${mysql.schema}?useSSL=true&serverTimezone=UTC&characterEncoding=UTF-8
     username: ${mysql.username}
     password: ${mysql.password}
+    hikari:
+      auto-commit: false
+      connection-timeout: 250 # 250ms
+      max-lifetime: 600000 # 10 minutes
+      maximum-pool-size: 25
+      minimum-idle: 10
+      pool-name: master
+
+  jpa:
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        generate_statistics: false
+        connection:
+          autocommit: false
