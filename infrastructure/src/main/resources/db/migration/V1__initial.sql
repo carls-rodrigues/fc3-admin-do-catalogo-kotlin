@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS category
+(
+    id BINARY(16) PRIMARY KEY
+)
